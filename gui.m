@@ -153,7 +153,7 @@ function ofdmpropbutton_Callback(hObject, eventdata, handles)
     disp(hMod)
 
 function loadbutton_Callback(hObject, eventdata, handles)
-    [filename, pathname] = uigetfile('*', 'Pick a Matlab code file');
+    [filename, pathname] = uigetfile('*', 'Pick file with modulated data');
     if isequal(filename,0) || isequal(pathname,0)
         disp('No data loaded')
     else
