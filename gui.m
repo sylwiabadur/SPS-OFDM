@@ -91,11 +91,13 @@ function numsymbols_CreateFcn(hObject, eventdata, handles)
     end
 
 function numguardband_Callback(hObject, eventdata, handles)
-    numguardband = str2double(get(handles.numguardband,'String'));
-    if ~isnan(numguardband)
-        handles.numguardbandVar=numguardband;
+    numguardbandString = get(handles.numguardband, 'String');
+    numguardbandColumn = [];
+    if ~isnan(numguardbandString)
+        numguardbandColumn = textToColumnParser(numguardbandString);
+        handles.numguardbandVar=numguardbandColumn;
     end
-    handles.hModVar.NumGuardBandCarriers = numguardband;
+    handles.hModVar.NumGuardBandCarriers = numguardbandColumn;
     guidata(hObject,handles)
 
 function numguardband_CreateFcn(hObject, eventdata, handles)
@@ -123,11 +125,13 @@ function windowing_Callback(hObject, eventdata, handles)
     guidata(hObject,handles)
 
 function pilotcarrier_Callback(hObject, eventdata, handles)
-    pilotcarrier = str2double(get(handles.pilotcarrier,'String'));
-    if ~isnan(pilotcarrier)
-        handles.pilotcarrierVar=pilotcarrier;
+    pilotcarrierString = get(handles.pilotcarrier,'String');
+    pilotcarrierColumn = [];
+    if ~isnan(pilotcarrierString)
+        pilotcarrierColumn = textToColumnParser(pilotcarrierString);
+        handles.pilotcarrierVar=pilotcarrierColumn;
     end
-    handles.hModVar.PilotCarrierIndices = pilotcarrier;
+    handles.hModVar.PilotCarrierIndices = pilotcarrierColumn;
     guidata(hObject,handles)
 
 function pilotcarrier_CreateFcn(hObject, eventdata, handles)
@@ -171,5 +175,5 @@ function createofdmmodbutton_Callback(hObject, eventdata, handles)
     
     hMod = handles.hModVar;
     showResourceMapping(hMod);
-    dataIn=handles.dataIn;
-    disp(dataIn)
+%     dataIn=handles.dataIn;
+%     disp(dataIn)
