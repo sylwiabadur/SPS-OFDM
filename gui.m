@@ -17,25 +17,32 @@ function varargout = gui(varargin)
         gui_mainfcn(gui_State, varargin{:});
     end
     % End initialization code - DO NOT EDIT
-
-function gui_OpeningFcn(hObject, eventdata, handles, varargin)
-    handles.output = hObject;
-    
-    guidata(hObject, handles);
+function init(hObject, handles)
     hMod = comm.OFDMModulator;
     handles.hModVar = hMod;
     handles.dcnullVar = 0;
     handles.pilotVar = 0;
     handles.cplengthVar = 16;
+    set(handles.cplength, 'String', num2str(handles.cplengthVar));
     handles.fftlengthVar = 64;
+    set(handles.fftlength, 'String', num2str(handles.fftlengthVar));
     handles.numsymbolsVar = 1;
+    set(handles.numsymbols, 'String', num2str(handles.numsymbolsVar));
     handles.numguardbandVar = [6;5];
+    set(handles.numguardband, 'String', arrayToString(handles.numguardbandVar));
     handles.numantennasVar = 1;
+    set(handles.numantennas, 'String', num2str(handles.numantennasVar));
     handles.pilotcarrierVar = [12; 26; 40; 54];
+    set(handles.pilotcarrier, 'String', arrayToString(handles.pilotcarrierVar));
     handles.windowlengthVar = 1;
+    set(handles.windowlength, 'String', num2str(handles.windowlengthVar));
     handles.windowingVar = 0;
     guidata(hObject,handles)
 
+function gui_OpeningFcn(hObject, eventdata, handles, varargin)
+    handles.output = hObject;
+    init(hObject, handles);
+    
 function varargout = gui_OutputFcn(hObject, eventdata, handles) 
     varargout{1} = handles.output;
 
@@ -165,7 +172,7 @@ function loadbutton_Callback(hObject, eventdata, handles)
         dataIn = readmatrix(filename);
         handles.dataIn=dataIn;
         guidata(hObject,handles)
-        msgbox('Data loaded');
+        msgbox('Data loaded from txt file');
     end
 
 function createofdmmodbutton_Callback(hObject, eventdata, handles)
@@ -175,5 +182,20 @@ function createofdmmodbutton_Callback(hObject, eventdata, handles)
     
     hMod = handles.hModVar;
     showResourceMapping(hMod);
-%     dataIn=handles.dataIn;
-%     disp(dataIn)
+    dataIn=handles.dataIn;
+    disp(dataIn)
+
+function writebutton_Callback(hObject, eventdata, handles)
+   if ~isfield(handles, 'dataIn')
+       msgbox('Please load data and create OFDM mod');
+       return;
+   end
+   matrix = handles.dataIn;
+   writematrix(matrix,'dataOut.txt');
+   msgbox('Data written to file dataOut.txt');
+
+function infobutton_Callback(hObject, eventdata, handles)
+    msgbox(['To modulate the signal please load signal symbols from file.' ...
+        newline 'Then you can see resource grid and process the signal.' ...
+        newline 'Write signal to txt file to pass it to the channel.' ...
+        newline 'All fields have default values. After editing please do not leave any field empty.']);
