@@ -166,10 +166,11 @@ function ofdmpropbutton_Callback(hObject, eventdata, handles)
 function loadbutton_Callback(hObject, eventdata, handles)
     [filename, pathname] = uigetfile('*', 'Pick file with modulated data');
     if isequal(filename,0) || isequal(pathname,0)
-        disp('No data loaded')
+        disp('No data loaded');
     else
         filename=strcat(pathname,filename);
         dataIn = readmatrix(filename);
+        dataIn(end,:) = [];
         handles.dataIn=dataIn;
         guidata(hObject,handles)
         msgbox('Data loaded from txt file');
@@ -182,16 +183,33 @@ function createofdmmodbutton_Callback(hObject, eventdata, handles)
     
     hMod = handles.hModVar;
     showResourceMapping(hMod);
+
     dataIn=handles.dataIn;
-    disp(dataIn)
+    info(hMod)
+    maxDataSize = info(hMod).DataInputSize(1);
+    dataIn = dataIn(1:maxDataSize,:);
+    if hMod.PilotInputPort == true
+        maxPilotSizeX = info(hMod).PilotInputSize(1);
+        maxPilotSizeY = info(hMod).PilotInputSize(2);
+        pilotIn = complex(rand(maxPilotSizeX));
+        pilotIn = pilotIn(1:maxPilotSizeX,1:maxPilotSizeY);
+        writematrix(pilotIn,'pilotIn.txt');
+        dataOut = hMod(dataIn, pilotIn);
+    else
+        dataOut = hMod(dataIn);
+    end
+    
+    handles.dataOut=dataOut;
+    guidata(hObject,handles);
+    msgbox('Data modulated successfully! You can write result to file');
 
 function writebutton_Callback(hObject, eventdata, handles)
-   if ~isfield(handles, 'dataIn')
+   if ~isfield(handles, 'dataOut')
        msgbox('Please load data and create OFDM mod');
        return;
    end
-   matrix = handles.dataIn;
-   writematrix(matrix,'dataOut.txt');
+   dataOut = handles.dataOut;
+   writematrix(dataOut,'dataOut.txt');
    msgbox('Data written to file dataOut.txt');
 
 function infobutton_Callback(hObject, eventdata, handles)
