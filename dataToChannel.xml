@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<struct>
+    <SamplingRate>1920000</SamplingRate>
+    <Nfft>128</Nfft>
+    <Windowing>0</Windowing>
+    <CyclicPrefixLengths>10</CyclicPrefixLengths>
+    <CyclicPrefixLengths>9</CyclicPrefixLengths>
+    <CyclicPrefixLengths>9</CyclicPrefixLengths>
+    <CyclicPrefixLengths>9</CyclicPrefixLengths>
+    <CyclicPrefixLengths>9</CyclicPrefixLengths>
+    <CyclicPrefixLengths>9</CyclicPrefixLengths>
+    <CyclicPrefixLengths>9</CyclicPrefixLengths>
+    <CyclicPrefixLengths>10</CyclicPrefixLengths>
+    <CyclicPrefixLengths>9</CyclicPrefixLengths>
+    <CyclicPrefixLengths>9</CyclicPrefixLengths>
+    <CyclicPrefixLengths>9</CyclicPrefixLengths>
+    <CyclicPrefixLengths>9</CyclicPrefixLengths>
+    <CyclicPrefixLengths>9</CyclicPrefixLengths>
+    <CyclicPrefixLengths>9</CyclicPrefixLengths>
+</struct>

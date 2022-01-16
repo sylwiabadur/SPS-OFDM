@@ -36,6 +36,42 @@ function init(hObject, handles)
     handles.enb = enb;
     guidata(hObject,handles)
 
+function num = parseModToNum(hObject, handles, mod)
+    num = 0;
+    if strcmp(mod,'QPSK')
+        num = 1;
+    elseif strcmp(mod,'16QAM')
+        num = 2;
+    elseif strcmp(mod,'64QAM')
+        num = 3;
+    elseif strcmp(mod,'256QAM')
+        num = 4;
+    end
+    set(handles.modulation, 'Value', num);
+    handles.modulationVar = mod;
+    disp('Click')
+    disp(handles.modulationVar)
+    guidata(hObject,handles)
+
+function writeWavePropToStruct(info)
+    writestruct(info, "dataToChannel.xml")
+
+function setModAndMultip(hObject, handles, modulation)
+    if modulation == 1 %QPSK
+        handles.multiplierVar = 2;
+        handles.modulationVar = 'QPSK';
+    elseif modulation == 2 %16QAM
+        handles.multiplierVar = 4;
+        handles.modulationVar = '16QAM';
+    elseif modulation == 3 %64QAM
+        handles.multiplierVar = 6;
+        handles.modulationVar = '64QAM';
+    elseif modulation == 4 %256QAM
+        handles.multiplierVar = 8;
+        handles.modulationVar = '256QAM';
+    end
+    guidata(hObject,handles);
+
 function ltemodgui_OpeningFcn(hObject, eventdata, handles, varargin)
     handles.output = hObject;
     init(hObject, handles);
@@ -99,24 +135,7 @@ function windowing_CreateFcn(hObject, eventdata, handles)
 
 function modulation_Callback(hObject, eventdata, handles)
     modulation = get(handles.modulation,'Value');
-    if modulation == 1 %QPSK
-        handles.multiplierVar = 2;
-        handles.modulationVar = 'QPSK';
-        disp('QPSK')
-    elseif modulation == 2 %16QAM
-        handles.multiplierVar = 4;
-        handles.modulationVar = '16QAM';
-        disp('16QAM')
-    elseif modulation == 3 %64QAM
-        handles.multiplierVar = 6;
-        handles.modulationVar = '64QAM';
-        disp('64QAM')
-    elseif modulation == 4 %256QAM
-        handles.multiplierVar = 8;
-        handles.modulationVar = '256QAM';
-        disp('256QAM')
-    end
-    guidata(hObject,handles)
+    setModAndMultip(hObject, handles, modulation);
 
 function modulation_CreateFcn(hObject, eventdata, handles)
     if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
@@ -141,9 +160,9 @@ function loadbutton_Callback(hObject, eventdata, handles)
         disp('No data loaded');
     else
         filename=strcat(pathname,filename);
-        dataIn = readmatrix(filename);
-        dataIn(end,:) = [];
+        [dataIn, modulationTxt] = readOfdmDataIn(filename);
         handles.dataIn=dataIn;
+        setModAndMultip(hObject, handles, parseModToNum(hObject, handles, modulationTxt));
         guidata(hObject,handles)
         msgbox('Data loaded from txt file');
     end
@@ -160,10 +179,11 @@ function ofdmmodbutton_Callback(hObject, eventdata, handles)
     symmod = lteSymbolModulate(randi([0,1],prod(gridsize)*multiplier,1), modulation);
     dataIn = dataIn(1:size(symmod),:);
     regrid = reshape(dataIn, gridsize);
-    dataOut = lteOFDMModulate(enb,regrid);
+    [dataOut, info] = lteOFDMModulate(enb,regrid);
     size(dataOut)
 
     handles.dataOut=dataOut;
+    handles.info = info;
     guidata(hObject,handles);
     msgbox('Data modulated successfully! You can write result to file');
 
@@ -173,7 +193,9 @@ function writebutton_Callback(hObject, eventdata, handles)
        return;
    end
    dataOut = handles.dataOut;
+   info = handles.info;
    writematrix(dataOut,'dataOutOfdm.txt');
+   writeWavePropToStruct(info)
    msgbox('Data written to file dataOutOfdm.txt');
 
 
