@@ -1,5 +1,6 @@
 # SPS-OFDM
 
+**PLEASE NOTE: VERSION WITH WORKING LTE OFDM IN ANOTHER REPOSITORY!!**
 
 ## How to run - prerequisites
 To run the app you will need to download Communications Toolbox packages in Matlab.
