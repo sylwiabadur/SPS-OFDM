@@ -1,6 +1,7 @@
 # SPS-OFDM
 
 **PLEASE NOTE: VERSION WITH WORKING LTE OFDM IN ANOTHER REPOSITORY!!**
+[Repository with LTE OFDM project](https://github.com/sylwiabadur/SPS-LTE-OFDM)
 
 ## How to run - prerequisites
 To run the app you will need to download Communications Toolbox packages in Matlab.
